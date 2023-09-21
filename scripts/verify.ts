@@ -20,8 +20,10 @@ async function main() {
   try {
     await run("verify:verify", {
       address: addresses["DEPLOYED_CONTRACT_ADDRESS"],
-      constructorArguments: [name, symbol, uri, whiteListRoot],
-      contract: "contracts/GroundUp721A.sol:GroundUp721A",
+      // constructorArguments: [name, symbol, uri, whiteListRoot],
+      constructorArguments: [whiteListRoot],
+      // contract: "contracts/GroundUp721A.sol:GroundUp721A",
+      contract: "contracts/JohanContract.sol:JohanContract",
     });
   } catch (error) {
     console.log(error);

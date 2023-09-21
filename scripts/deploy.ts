@@ -18,11 +18,12 @@ async function main() {
     )} ETH`
   );
 
-  const ERC721AContract = await ethers.getContractFactory("GroundUp721A");
+  // const ERC721AContract = await ethers.getContractFactory("GroundUp721A");
+  const ERC721AContract = await ethers.getContractFactory("JohanContract");
   const erc721AContract = await ERC721AContract.deploy(
-    name,
-    symbol,
-    uri,
+    // name,
+    // symbol,
+    // uri,
     whiteListRoot
   );
   const tx = await erc721AContract.deployed();

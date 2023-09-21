@@ -38,10 +38,10 @@ contract JohanContract is ERC721A, Ownable {
      * @param _mintAmount Quantity of nfts to mint
      * @param _merkleProof MerkleProof for the address in whitelist, empty array if on allowlist
      */
-    function mint(uint256 _mintAmount, bytes32[] calldata _merkleProof)
-        public
-        payable
-    {
+    function mint(
+        uint256 _mintAmount,
+        bytes32[] calldata _merkleProof
+    ) public payable {
         require(msg.value >= nftPrice * _mintAmount, "Insufficient funds!");
         require(_mintAmount > 0, "Invalid mint amount!");
         require(
@@ -80,10 +80,10 @@ contract JohanContract is ERC721A, Ownable {
      * @param _receiver the address will receive minted nfts
      * @param _mintAmount the amount of nfts will be minted
      */
-    function mintForAddress(address _receiver, uint256 _mintAmount)
-        public
-        onlyOwner
-    {
+    function mintForAddress(
+        address _receiver,
+        uint256 _mintAmount
+    ) public onlyOwner {
         require(
             totalSupply() + _mintAmount <= maxSupply,
             "Max supply exceeded!"
@@ -102,10 +102,9 @@ contract JohanContract is ERC721A, Ownable {
      * @dev Allow admin to set the new whitelist merkle root if the whitelist changed
      * @param _whitelistMerkleRoot The new whitelist merle root to be set
      */
-    function setWhitelistMerkleRoot(bytes32 _whitelistMerkleRoot)
-        public
-        onlyOwner
-    {
+    function setWhitelistMerkleRoot(
+        bytes32 _whitelistMerkleRoot
+    ) public onlyOwner {
         whitelistMerkleRoot = _whitelistMerkleRoot;
     }
 
@@ -143,7 +142,7 @@ contract JohanContract is ERC721A, Ownable {
     }
 }
 
-/* Notes:
+/* Notes for Remix:
 
     Contract address: 0xD7ACd2a9FD159E69Bb102A1ca21C9a3e3A5F771B
         - Mint price: 100000000000000 wei == 0.0001 ether
@@ -166,5 +165,32 @@ contract JohanContract is ERC721A, Ownable {
 
     Non whitelist address: 
         - 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB
+
+*/
+
+/* Notes for deploy testnet:
+
+    Contract address: 0x81F91460F1BFea30708686CD26B234334897852b
+        - Mint price: 100000000000000 wei == 0.0001 ether
+        - Max supply: 2500
+        - Max mint per address: 5
+
+    Merkle root: 0x4557a9c86894907b2ddcc1f3a216c6b3512fc603fc1ff1e210fda8452e4d5c29
+
+    Owner: 0x10a340Aa34e6a5cbe2FC2355D047B2F6d22C2871
+        - Deployed the contract
+        - Can only call the 'onlyOwner' modifier functions
+        - Private key: 8e9dfc7b1e8632ee7d5c769d5091813798d214e6dc4459a3d0e785e8714cb447
+
+    Whitelist address: 
+        - 0x83549d6123D43F44E816585bd01fecB1856f1956:
+            - Proof: ["0x17c17c2dbdba414be8a46f136fa221488204264b0f7ddf75c97c77a27a074d0c"]
+            - Total mint: 0
+        - 0xedE4A27Bc064fb075EaAc4Ec6AAef1ac63642752:
+            - Proof: ["0x5400275625ff65d71dc0191c97b290a9f24ecd4567d32d8708c8efaeba311980"]
+            - Total mint: 0
+
+    Non whitelist address: 
+        - 0x3f294E36B99C5A3Ca235Cd7cE9C36b6cAe62E868
 
 */
