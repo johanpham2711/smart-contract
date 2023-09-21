@@ -31,6 +31,8 @@ const config: HardhatUserConfig = {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`!,
       chainId: 5,
       accounts: [process.env.PRIVATE_KEY!],
+      gas: 2100000,
+      gasPrice: 8000000000,
     },
   },
   gasReporter: {

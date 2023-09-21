@@ -111,25 +111,13 @@ export class WalletsService {
     });
     if (!walletList)
       ErrorHelper.BadRequestException(WALLET_MESSAGE.LIST_WALLET_NOT_FOUND);
-    console.log(
-      '🚀 ~ file: wallets.service.ts:112 ~ WalletsService ~ walletList:',
-      walletList,
-    );
 
     const walletListTree = MerkleTreeHelper.createMerkleTree(
       walletList.walletList,
     );
-    console.log(
-      '🚀 ~ file: wallets.service.ts:122 ~ WalletsService ~ walletListTree:',
-      walletListTree,
-    );
     const merkleProof = MerkleTreeHelper.getMerkleHexProof(
       walletListTree,
       walletAddress,
-    );
-    console.log(
-      '🚀 ~ file: wallets.service.ts:126 ~ WalletsService ~ merkleProof:',
-      merkleProof,
     );
     if (!merkleProof.length)
       ErrorHelper.BadRequestException(MERKLE_TREE_MESSAGE.WALLET_NOT_IN_LIST);

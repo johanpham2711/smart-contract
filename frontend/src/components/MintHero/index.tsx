@@ -113,27 +113,28 @@ const MintHero = (props: IMintHeroProps) => {
 
   const handleMintNFTs = async () => {
     if (account) {
-      getStatusBlockchain()
-        .then((status: number) => {
-          console.log('SmartContract status: ', status)
-          switch (status) {
-            case 1:
-              dispatch(getProof({ walletAddress: account, type: EWalletListType.ALLOW_LIST }))
-              break
-            case 2:
-              dispatch(getProof({ walletAddress: account, type: EWalletListType.WHITE_LIST }))
-              break
-            case 3:
-              setMintStatus(EStatus.ERROR)
-              setMintError('Event is over!')
-              onOpenMintResultModal()
-          }
-        })
-        .catch((err) => {
-          setMintStatus(EStatus.ERROR)
-          setMintError('Something went wrong.')
-          onOpenMintResultModal()
-        })
+      dispatch(getProof({ walletAddress: account, type: EWalletListType.WHITE_LIST }))
+      // getStatusBlockchain()
+      //   .then((status: number) => {
+      //     console.log('SmartContract status: ', status)
+      //     switch (status) {
+      //       case 1:
+      //         dispatch(getProof({ walletAddress: account, type: EWalletListType.ALLOW_LIST }))
+      //         break
+      //       case 2:
+
+      //         break
+      //       case 3:
+      //         setMintStatus(EStatus.ERROR)
+      //         setMintError('Event is over!')
+      //         onOpenMintResultModal()
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     setMintStatus(EStatus.ERROR)
+      //     setMintError('Something went wrong.')
+      //     onOpenMintResultModal()
+      //   })
     }
   }
 
@@ -212,7 +213,7 @@ const MintHero = (props: IMintHeroProps) => {
           if ((err as Error).message.includes('insufficient funds')) {
             setMintError('Insufficient funds for gas.')
           }
-          RevertedMessages.Messages.forEach((message) => {
+          RevertedMessages.Messages?.forEach((message) => {
             if ((err as Error).message.indexOf(message.errorMessage) > -1) {
               setMintError(message.userMessage)
             }
@@ -274,116 +275,47 @@ const MintHero = (props: IMintHeroProps) => {
             </Typography>
           </Box>
 
-          {
-            {
-              [PHASE.WAITING]: (
-                <Box className="mint-hero-info">
+          <>
+            <Box className="mint-hero-info">
+              <Typography className="mint-hero-intro-text">
+                Current phase: <strong>Whitelist Mint</strong>
+              </Typography>
+              <Typography className="mint-hero-intro-text">
+                Current phase ends in:{' '}
+                <strong>
+                  {whitelistDuration.hours}h : {whitelistDuration.minutes}m :{' '}
+                  {whitelistDuration.seconds ? parseInt(whitelistDuration.seconds.toString()) : 0}s
+                </strong>
+              </Typography>
+              {/* <Typography className="mint-hero-intro-text">
+                Current phase minted:{' '}
+                <strong>
+                  {mintedStats ? mintedStats.whitelistMinted : '??'}/{WHITELIST_AMOUNT}
+                </strong>
+              </Typography> */}
+              <Typography className="mint-hero-intro-text">
+                Total minted:{' '}
+                <strong>
+                  {mintedStats ? mintedStats.whitelistMinted : '??'}/{TOTAL_AMOUNT}
+                </strong>
+              </Typography>
+            </Box>
+
+            <Box className="mint-section">
+              <Box style={{ display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+                <Box className="mint-box">
+                  <Typography className="mint-hero-intro-text">Mint</Typography>
+                  <QuantityPicker onChange={onQuantityChange} />
                   <Typography className="mint-hero-intro-text">
-                    Countdown to Mint:{' '}
-                    <strong>
-                      {waitingDuration.days} days : {waitingDuration.hours} h :{' '}
-                      {waitingDuration.minutes} mins
-                    </strong>
+                    {Number(NFT_PRICE) * quantity}eth
                   </Typography>
                 </Box>
-              ),
-              [PHASE.ALLOWLIST]: (
-                <>
-                  <Box className="mint-hero-info">
-                    <Typography className="mint-hero-intro-text">
-                      Current phase: <strong>Allowlist Mint</strong>
-                    </Typography>
-                    <Typography className="mint-hero-intro-text">
-                      Current phase ends in:{' '}
-                      <strong>
-                        {allowlistDuration.hours}h : {allowlistDuration.minutes}m :{' '}
-                        {allowlistDuration.seconds}s
-                      </strong>
-                    </Typography>
-                    <Typography className="mint-hero-intro-text">
-                      Current phase minted:{' '}
-                      <strong>
-                        {mintedStats ? mintedStats.allowlistMinted : '??'}/{ALLOWLIST_AMOUNT}
-                      </strong>
-                    </Typography>
-                    <Typography className="mint-hero-intro-text">
-                      Total minted:{' '}
-                      <strong>
-                        {mintedStats ? mintedStats.totalMinted : '??'}/{TOTAL_AMOUNT}
-                      </strong>
-                    </Typography>
-                  </Box>
-
-                  <Box className="mint-section">
-                    <Box style={{ display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
-                      <Box className="mint-box">
-                        <Typography className="mint-hero-intro-text">Mint</Typography>
-                        <QuantityPicker onChange={onQuantityChange} />
-                        <Typography className="mint-hero-intro-text">
-                          {Number(NFT_PRICE) * quantity}eth
-                        </Typography>
-                      </Box>
-                      <Button className="mint-btn" onClick={onOpenConfirmationModal}>
-                        Mint
-                      </Button>
-                    </Box>
-                  </Box>
-                </>
-              ),
-              [PHASE.WHITELIST]: (
-                <>
-                  <Box className="mint-hero-info">
-                    <Typography className="mint-hero-intro-text">
-                      Current phase: <strong>Whitelist Mint</strong>
-                    </Typography>
-                    <Typography className="mint-hero-intro-text">
-                      Current phase ends in:{' '}
-                      <strong>
-                        {whitelistDuration.hours}h : {whitelistDuration.minutes}m :{' '}
-                        {whitelistDuration.seconds
-                          ? parseInt(whitelistDuration.seconds.toString())
-                          : 0}
-                        s
-                      </strong>
-                    </Typography>
-                    <Typography className="mint-hero-intro-text">
-                      Current phase minted:{' '}
-                      <strong>
-                        {mintedStats ? mintedStats.whitelistMinted : '??'}/{WHITELIST_AMOUNT}
-                      </strong>
-                    </Typography>
-                    <Typography className="mint-hero-intro-text">
-                      Total minted:{' '}
-                      <strong>
-                        {mintedStats ? mintedStats.totalMinted : '??'}/{TOTAL_AMOUNT}
-                      </strong>
-                    </Typography>
-                  </Box>
-
-                  <Box className="mint-section">
-                    <Box style={{ display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
-                      <Box className="mint-box">
-                        <Typography className="mint-hero-intro-text">Mint</Typography>
-                        <QuantityPicker onChange={onQuantityChange} />
-                        <Typography className="mint-hero-intro-text">
-                          {Number(NFT_PRICE) * quantity}eth
-                        </Typography>
-                      </Box>
-                      <Button className="mint-btn" onClick={onOpenConfirmationModal}>
-                        Mint
-                      </Button>
-                    </Box>
-                  </Box>
-                </>
-              ),
-              [PHASE.OVER]: (
-                <Box className="mint-hero-info">
-                  <Typography className="mint-hero-intro-text">Minted: {TOTAL_AMOUNT}/{TOTAL_AMOUNT}</Typography>
-                  <Typography className="mint-hero-intro-text">Mint ended!</Typography>
-                </Box>
-              )
-            }[phase]
-          }
+                <Button className="mint-btn" onClick={onOpenConfirmationModal}>
+                  Mint
+                </Button>
+              </Box>
+            </Box>
+          </>
         </Box>
       </Box>
 

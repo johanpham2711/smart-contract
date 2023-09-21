@@ -14,7 +14,7 @@ interface IWalletState {
   mintedStats: {
     allowlistMinted: number
     whitelistMinted: number
-    totalMinted: number
+    totalAllowMint: number
   } | null
   mintedStatsError: any
 }
