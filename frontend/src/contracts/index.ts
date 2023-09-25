@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 // import contractGroundUp721A from './GroundUp721A.json'
-import contractJohanContract from './GroundUp721A.json'
+import contractJohanContract from './JohanContract.json'
 
 const getGroundUp721AContract = (address: string, signerOrProvider?: any) => {
   return new ethers.Contract(address, contractJohanContract.abi, signerOrProvider)

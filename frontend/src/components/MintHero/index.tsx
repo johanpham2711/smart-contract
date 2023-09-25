@@ -10,7 +10,7 @@ import { RevertedMessages } from '~/contracts'
 import { openConnectWalletModal, openDownloadMetaMaskModal } from '~/store/slices/local.slice'
 import { getMintedStats, getProof, resetProof } from '~/store/slices/wallet.slice'
 import { RootState } from '~/store/store'
-import { getStatusBlockchain, mintBlockchain } from '~/utils/blockchain'
+import { getMaxSupply, getTotalSupply, mintBlockchain } from '~/utils/blockchain'
 import { COOKIES, EWalletListType, PHASE } from '~/utils/constants'
 
 import QuantityPicker from '../QuantityPicker'
@@ -52,16 +52,9 @@ const MintHero = (props: IMintHeroProps) => {
   const [mintStatus, setMintStatus] = useState(EStatus.SUCCESS)
   const [mintError, setMintError] = useState('Something went wrong.')
 
-  const [waitingDuration, setWaitingDuration] = useState<DurationObjectUnits>({
-    days: 0,
-    hours: 0,
-    minutes: 0
-  })
-  const [allowlistDuration, setAllowlistDuration] = useState<DurationObjectUnits>({
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  })
+  const [totalSupply, setTotalSupply] = useState<number | string>('')
+  const [maxSupply, setMaxSupply] = useState<number | string>('')
+
   const [whitelistDuration, setWhitelistDuration] = useState<DurationObjectUnits>({
     hours: 0,
     minutes: 0,
@@ -109,6 +102,7 @@ const MintHero = (props: IMintHeroProps) => {
 
   const onCloseMintResultModal = () => {
     setMintResultModalOpened(false)
+    getNFTStats()
   }
 
   const handleMintNFTs = async () => {
@@ -138,29 +132,20 @@ const MintHero = (props: IMintHeroProps) => {
     }
   }
 
+  // useEffect(() => {
+  //   dispatch(getMintedStats())
+  // }, [])
+
+  const getNFTStats = async () => {
+    const [total, max] = await Promise.all([getTotalSupply(), getMaxSupply()])
+    // convert hex to decimal
+    setTotalSupply(parseInt(total._hex, 16))
+    setMaxSupply(parseInt(max._hex, 16))
+  }
+
   useEffect(() => {
-    dispatch(getMintedStats())
+    getNFTStats()
   }, [])
-
-  useEffect(() => {
-    if (waitingCountdown) {
-      setWaitingDuration(
-        Duration.fromMillis(waitingCountdown)
-          .shiftTo('days', 'hours', 'minutes', 'seconds')
-          .toObject()
-      )
-    }
-  }, [waitingCountdown])
-
-  useEffect(() => {
-    if (allowlistCountdown) {
-      setAllowlistDuration(
-        Duration.fromMillis(allowlistCountdown)
-          .shiftTo('hours', 'minutes', 'seconds', 'milliseconds')
-          .toObject()
-      )
-    }
-  }, [allowlistCountdown])
 
   useEffect(() => {
     if (whitelistCountdown) {
@@ -252,7 +237,7 @@ const MintHero = (props: IMintHeroProps) => {
             <Typography variant="h1" className="mint-hero-subtext">
               MINT INFO:
             </Typography>
-            <Typography className="mint-hero-intro-text">Phase 1: Team {TEAM_AMOUNT}</Typography>
+            {/* <Typography className="mint-hero-intro-text">Phase 1: Team {TEAM_AMOUNT}</Typography>
             <Typography className="mint-hero-intro-text">
               Phase 2: Allowlist {ALLOWLIST_AMOUNT}
             </Typography>
@@ -272,7 +257,7 @@ const MintHero = (props: IMintHeroProps) => {
             <Typography className="mint-hero-intro-text note">
               *No public phase. The remaining NFTs will be allocated to the treasury for community
               rewards.
-            </Typography>
+            </Typography> */}
           </Box>
 
           <>
@@ -296,7 +281,7 @@ const MintHero = (props: IMintHeroProps) => {
               <Typography className="mint-hero-intro-text">
                 Total minted:{' '}
                 <strong>
-                  {mintedStats ? mintedStats.whitelistMinted : '??'}/{TOTAL_AMOUNT}
+                  {totalSupply || '??'}/{maxSupply || '??'}
                 </strong>
               </Typography>
             </Box>

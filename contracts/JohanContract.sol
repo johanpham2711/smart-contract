@@ -170,7 +170,7 @@ contract JohanContract is ERC721A, Ownable {
 
 /* Notes for deploy testnet:
 
-    Contract address: 0x81F91460F1BFea30708686CD26B234334897852b
+    Contract address: 0x4bBF3F7568A6b52eCDaC62651E1e1Fa6BFE36e0E
         - Mint price: 100000000000000 wei == 0.0001 ether
         - Max supply: 2500
         - Max mint per address: 5

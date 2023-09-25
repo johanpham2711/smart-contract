@@ -126,6 +126,79 @@ export const AboutHeroStyle = styled('section')(({ theme }: any) => {
             fontSize: '1.5rem'
           }
         }
+      },
+
+      '.mint-section': {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        borderRadius: '1rem',
+        padding: '1.25rem',
+        marginTop: '1.875rem',
+        backgroundColor: 'rgba(255, 255, 255, .4)',
+        boxShadow:
+          'inset 0 0 1px rgba(255, 255, 255, .54), inset 0 1px 1px rgba(214, 211, 255, .56), 0 10px 10px -8px rgba(21, 20, 46, .25)',
+        // backgroundImage: 'linear-gradient(rgba(21, 20, 46, .34), rgba(21, 20, 46, .11))',
+        // boxShadow: '0 1px 1px rgba(255, 255, 255, .15), inset 0 2px 4px rgba(21, 20, 46, .23)',
+
+        '.mint-box': {
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          gap: '0.75rem',
+
+          p: {
+            marginBottom: 0
+          },
+
+          '.mint-hero-intro-text': {
+            fontSize: '100px'
+          },
+
+          '.withdraw-text': {
+            fontSize: '1rem',
+            fontWeight: 400,
+            lineHeight: '1.5rem',
+            marginBottom: '1.5rem',
+
+            [theme.breakpoints.up('sm')]: {
+              fontSize: '1.125rem',
+
+              'b, strong': {
+                fontSize: '1.5rem'
+              }
+            }
+          }
+        },
+
+        '.mint-btn': {
+          borderRadius: '0.375rem',
+          padding: '0.25rem 0.5rem',
+          height: '2.5rem',
+          width: '100%',
+          fontSize: '1rem',
+          fontWeight: 500,
+          textTransform: 'initial',
+          overflow: 'hidden',
+          margin: '1rem auto 0.25rem',
+          backgroundColor: theme.primary,
+          color: theme.contrast,
+          transition: 'all 0.15s ease-in-out 0s',
+          transformOrigin: 'center center',
+
+          [theme.breakpoints.up('md')]: {
+            padding: '0.75rem 0.875rem',
+            fontSize: '1.125rem'
+          },
+
+          '&:hover': {
+            borderColor: rgba(theme.primary, 0.2)
+          },
+
+          '&:active': {
+            transform: 'scale(0.95)'
+          }
+        }
       }
     },
 

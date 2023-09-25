@@ -1,7 +1,12 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import Image from 'next/image'
 
 import { AboutHeroStyle } from './index.style'
+import { getBalance, withdraw } from '~/utils/blockchain'
+import { useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
+import { useDispatch } from 'react-redux'
+import { openConnectWalletModal, openDownloadMetaMaskModal } from '~/store/slices/local.slice'
 
 const NFT_PRICE = process.env.NEXT_PUBLIC_NFT_PRICE || '0.02'
 const TEAM_AMOUNT = process.env.NEXT_PUBLIC_TEAM_AMOUNT || '400'
@@ -10,6 +15,47 @@ const WHITELIST_AMOUNT = process.env.NEXT_PUBLIC_WHITELIST_AMOUNT || '350'
 const TOTAL_AMOUNT = Number(TEAM_AMOUNT) + Number(ALLOWLIST_AMOUNT) + Number(WHITELIST_AMOUNT)
 
 const AboutHero = () => {
+  const dispatch = useDispatch()
+
+  const { connector, hooks } = useWeb3React()
+  const { useSelectedAccount } = hooks
+  const account = useSelectedAccount(connector)
+  const [balance, setBalance] = useState('')
+  const [withdrawStatus, setWithdrawStatus] = useState('')
+
+  const onGetBalance = async () => {
+    getBalance()
+      .then((result) => {
+        console.log('Balance: ', result)
+        const balanceResult = Number(result) / 10 ** 18
+        setBalance(balanceResult.toString())
+      })
+      .catch((err) => {
+        console.log('Get balance: ', err)
+      })
+    // }
+  }
+
+  const onWithdraw = async () => {
+    if (!account) {
+      if (typeof window.ethereum !== 'undefined') {
+        dispatch(openConnectWalletModal())
+      } else {
+        dispatch(openDownloadMetaMaskModal())
+      }
+    } else {
+      withdraw()
+        .then((result) => {
+          console.log('Withdraw: ', result)
+          setWithdrawStatus(result as string)
+        })
+        .catch((err) => {
+          console.log('Withdraw error: ', err)
+          setWithdrawStatus('Withdraw failed! You are not the owner of the contract.')
+        })
+    }
+  }
+
   return (
     <AboutHeroStyle>
       <Box className="about-hero-bg"></Box>
@@ -23,7 +69,7 @@ const AboutHero = () => {
           </Typography>
 
           <Box className="check-status">
-            <Typography className="about-hero-intro-text">
+            {/* <Typography className="about-hero-intro-text">
               <b>GroundUp Genesis Pass</b> is the studio’s inaugural collection of 2,500 digital
               collectible NFTs living on the Ethereum chain. It’s a brand new way of recruiting and
               discovering great musical talent, and leverages the web3 ecosystem for creativity,
@@ -42,7 +88,27 @@ const AboutHero = () => {
             </Typography>
             <Typography className="about-hero-intro-text">
               Mint Price: <b>{NFT_PRICE}eth</b>
-            </Typography>
+            </Typography> */}
+            <Box className="mint-section">
+              <Box style={{ display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+                <Box className="mint-box">
+                  <Typography className="mint-hero-intro-text">{balance || '??'} ETH</Typography>
+                </Box>
+                <Button className="mint-btn" onClick={onGetBalance}>
+                  Get balance of the contract
+                </Button>
+              </Box>
+            </Box>
+            <Box className="mint-section">
+              <Box style={{ display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+                <Box className="mint-box">
+                  <Typography className="withdraw-text">{withdrawStatus}</Typography>
+                </Box>
+                <Button disabled={!balance} className="mint-btn" onClick={onWithdraw}>
+                  Withdraw
+                </Button>
+              </Box>
+            </Box>
           </Box>
         </Box>
 
