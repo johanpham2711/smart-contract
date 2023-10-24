@@ -39,7 +39,7 @@
     "@nestjs/sequelize": "^9.0.0",
     "@nestjs/swagger": "^7.1.2",
     "class-transformer": "0.4.0",
-    "class-validator": "^0.13.2",
+    "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^14.2.0",
